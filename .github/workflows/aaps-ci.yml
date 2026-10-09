@@ -32,17 +32,14 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/keystore"
           echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore/keystore.jks"
+          echo "KEYSTORE_FILE=$RUNNER_TEMP/keystore/keystore.jks" >> $GITHUB_ENV
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build fullRelease APK
         run: |
-          ./gradlew assembleFullRelease \
-            -Pandroid.injected.signing.store.file="$RUNNER_TEMP/keystore/keystore.jks" \
-            -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
-            -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
-            -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+          ./gradlew assembleFullRelease
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
