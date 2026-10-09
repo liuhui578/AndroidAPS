@@ -400,3 +400,10 @@ printf('--------------\n')
 //     throw new GradleException('There are uncommitted changes or git system is not available. Clone sources again as described in wiki and do not allow gradle update')
 // }
 
+
+// Disable NDK strip tasks (GitHub runner NDK toolchain incompatible with this old AGP)
+tasks.whenTaskAdded { task ->
+    if (task.name.contains('strip') && task.name.contains('Release')) {
+        task.enabled = false
+    }
+}
