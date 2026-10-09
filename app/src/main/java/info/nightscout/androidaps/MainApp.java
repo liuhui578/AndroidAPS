@@ -14,7 +14,6 @@ import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -99,7 +98,6 @@ import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.SP;
-import io.fabric.sdk.android.Fabric;
 
 import static info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
 
@@ -143,13 +141,7 @@ public class MainApp extends Application {
             log.error("Uncaught exception crashing app", ex);
         });
 
-        try {
-            if (FabricPrivacy.fabricEnabled()) {
-                Fabric.with(this, new Crashlytics());
-            }
-        } catch (Exception e) {
-            log.error("Error with Fabric init! " + e);
-        }
+        // Crashlytics/Fabric init removed (service discontinued)
 
         registerActivityLifecycleCallbacks(ActivityMonitor.INSTANCE);
 
