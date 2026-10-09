@@ -2,7 +2,6 @@ package info.nightscout.androidaps.utils;
 
 import android.os.Bundle;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.slf4j.Logger;
@@ -43,37 +42,22 @@ public class FabricPrivacy {
         }
     }
 
-    // Crashlytics logException
+    // Crashlytics logException (Crashlytics removed - no-op with logging)
     public static void logException(Throwable throwable) {
-        try {
-            final Crashlytics crashlytics = Crashlytics.getInstance();
-            crashlytics.core.logException(throwable);
-        } catch (NullPointerException | IllegalStateException e) {
-            if (L.isEnabled(L.CORE))
-                log.debug("Ignoring opted out non-initialized log: " + throwable);
-        }
+        if (L.isEnabled(L.CORE))
+            log.debug("logException (disabled): " + throwable);
     }
 
-    // Crashlytics log
+    // Crashlytics log (Crashlytics removed - no-op with logging)
     public static void log(String msg) {
-        try {
-            final Crashlytics crashlytics = Crashlytics.getInstance();
-            crashlytics.core.log(msg);
-        } catch (NullPointerException | IllegalStateException e) {
-            if (L.isEnabled(L.CORE))
-                log.debug("Ignoring opted out non-initialized log: " + msg);
-        }
+        if (L.isEnabled(L.CORE))
+            log.debug("log (disabled): " + msg);
     }
 
-    // Crashlytics log
+    // Crashlytics log (Crashlytics removed - no-op with logging)
     public static void log(int priority, String tag, String msg) {
-        try {
-            final Crashlytics crashlytics = Crashlytics.getInstance();
-            crashlytics.core.log(priority, tag, msg);
-        } catch (NullPointerException | IllegalStateException e) {
-            if (L.isEnabled(L.CORE))
-                log.debug("Ignoring opted out non-initialized log: " + msg);
-        }
+        if (L.isEnabled(L.CORE))
+            log.debug("log (disabled): " + msg);
     }
 
     public static boolean fabricEnabled() {
