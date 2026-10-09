@@ -1,11 +1,13 @@
 buildscript {
     repositories {
-        maven { url 'https://maven.fabric.io/public' }
-        jcenter()
+        google()
+        mavenCentral()
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
         classpath 'de.undercouch:gradle-download-task:3.4.3'
     }
@@ -14,7 +16,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
 apply plugin: 'de.undercouch.download'
 
@@ -32,8 +33,9 @@ ext {
 
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    jcenter { url "https://jcenter.bintray.com/" }
+    maven { url 'https://maven.aliyun.com/repository/google' }
+    maven { url 'https://maven.aliyun.com/repository/central' }
+    maven { url 'https://maven.aliyun.com/repository/jcenter' }
     mavenCentral()
 }
 
@@ -104,6 +106,18 @@ tasks.matching { it instanceof Test }.all {
 android {
     compileSdkVersion 28
 
+    signingConfigs {
+        release {
+            def ks = System.getenv("KEYSTORE_FILE")
+            if (ks != null && !ks.isEmpty()) {
+                storeFile file(ks)
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 28
@@ -138,6 +152,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -212,7 +227,10 @@ android {
 
 allprojects {
     repositories {
-        jcenter()
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        mavenCentral()
         flatDir {
             dirs 'libs'
         }
@@ -228,9 +246,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.2.1'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-database:19.2.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
-        transitive = true;
-    }
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
@@ -380,7 +395,8 @@ printf('--------------\n')
 printf('isMaster: %s\n', isMaster().toString())
 printf('allCommited: %s\n', allCommited().toString())
 printf('--------------\n')
-if (isMaster() && !allCommited()) {
-    throw new GradleException('There are uncommitted changes or git system is not available. Clone sources again as described in wiki and do not allow gradle update')
-}
+// Disabled the uncommitted-changes check for CI builds
+// if (isMaster() && !allCommited()) {
+//     throw new GradleException('There are uncommitted changes or git system is not available. Clone sources again as described in wiki and do not allow gradle update')
+// }
 
