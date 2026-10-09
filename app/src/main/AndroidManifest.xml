@@ -236,10 +236,6 @@
         <service android:name=".plugins.pump.insight.connection_service.InsightConnectionService" />
         <service android:name=".plugins.pump.insight.InsightAlertService" />
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
-
         <activity
             android:name=".setupwizard.SetupWizardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
